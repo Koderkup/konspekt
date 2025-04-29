@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import * as FileSystem from "expo-file-system";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface Question {
   id: number;
@@ -10,6 +11,11 @@ interface Question {
 }
 
 const Quiz: React.FC = () => {
+  const backgroundColor = useThemeColor(
+    { light: "#fff", dark: "#000" },
+    "background"
+  );
+  const textColor = useThemeColor({ light: "#000", dark: "#fff" }, "text");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
@@ -112,10 +118,12 @@ let timer: NodeJS.Timeout | null = null;
   const currentQuestions = questions.slice(startIndex, startIndex + 2);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor }]}>
       {currentQuestions.map((question, index) => (
         <View key={question.id} style={styles.questionContainer}>
-          <Text style={styles.question}>{question.question}</Text>
+          <Text style={[styles.question, { color: textColor }]}>
+            {question.question}
+          </Text>
           {question.options.map((option) => (
             <TouchableOpacity
               key={option}
@@ -125,16 +133,19 @@ let timer: NodeJS.Timeout | null = null;
               ]}
               onPress={() => handleAnswer(startIndex + index, option)}
             >
-              <Text style={styles.optionText}>{option}</Text>
+              <Text style={[styles.optionText, { color: textColor }]}>
+                {option}
+              </Text>
             </TouchableOpacity>
           ))}
           {results[startIndex + index] && (
             <Text
-              style={
+              style={[
                 results[startIndex + index] === "correct"
                   ? styles.correct
-                  : styles.incorrect
-              }
+                  : styles.incorrect,
+                { color: textColor },
+              ]}
             >
               {results[startIndex + index] === "correct"
                 ? "Правильно!"
