@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
+import * as FileSystem from "expo-file-system";
 
 interface Question {
   id: number;
@@ -14,6 +15,48 @@ const Quiz: React.FC = () => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [results, setResults] = useState<(string | null)[]>([]);
 
+// const fetchAndUpdateQuestions = async () => {
+//   try {
+//     const serverUrl = "https://example.com/questions.json";
+//     const localPath = FileSystem.documentDirectory + "questions.json";
+
+//     const response = await fetch(serverUrl);
+//     const json = await response.json();
+
+    
+//     await FileSystem.writeAsStringAsync(localPath, JSON.stringify(json));
+//     console.log("Вопросы успешно обновлены и сохранены локально:", localPath);
+
+    
+//     setQuestions(json);
+//     setAnswers(Array(json.length).fill(null));
+//     setResults(Array(json.length).fill(null));
+//   } catch (error) {
+//     console.error("Ошибка загрузки и обновления вопросов:", error);
+//   }
+// };
+// useEffect(() => {
+//   (async () => {
+//     const localPath = FileSystem.documentDirectory + "questions.json";
+//     try {
+//       const fileExists = await FileSystem.getInfoAsync(localPath);
+//       let req;
+//       if (fileExists.exists) {
+//         const fileContent = await FileSystem.readAsStringAsync(localPath);
+//         const req = JSON.parse(fileContent);
+//         setQuestions(req);
+//       } else {
+//         const assetContent = await fetch(require("../assets/questions.json"));
+//         req = await assetContent.json();
+//         setQuestions(req);
+//       }
+//       setAnswers(Array(req.length).fill(null));
+//       setResults(Array(req.length).fill(null));
+//     } catch (error) {
+//       console.error("Ошибка загрузки вопросов:", error);
+//     }
+//   })();
+// }, []);
   useEffect(() => {
     const req = require("../assets/questions.json");
     setQuestions(req);
