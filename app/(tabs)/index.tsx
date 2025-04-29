@@ -12,8 +12,8 @@ export default function HomeScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer); // Очищаем таймер при размонтировании
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -21,7 +21,7 @@ export default function HomeScreen() {
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
         isLoading ? (
-          <Loading /> // Показываем компонент Loading вместо изображения
+          <Loading />
         ) : (
           <Image
             source={require("@/assets/images/partial-icon.png")}
