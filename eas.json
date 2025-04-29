@@ -1,8 +1,26 @@
 {
+    "cli": {
+        "appVersionSource": "remote"
+    },
     "build": {
         "preview": {
             "android": {
                 "buildType": "apk"
+            },
+            "distribution": "internal",
+            "env": {
+                "API_KEY": "plain_text_value",
+                "SECRET_KEY": "sensitive_value"
+            }
+        },
+        "production": {
+            "android": {
+                "buildType": "apk"
+            },
+            "autoIncrement": true,
+            "env": {
+                "API_KEY": "plain_text_value",
+                "SECRET_KEY": "sensitive_value"
             }
         }
     }
