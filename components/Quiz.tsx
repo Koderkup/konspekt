@@ -15,7 +15,7 @@ const Quiz: React.FC = () => {
   const [results, setResults] = useState<(string | null)[]>([]);
 
   useEffect(() => {
-    const req = require("../../konspekt/questions.json");
+    const req = require("../assets/questions.json");
     setQuestions(req);
     setAnswers(Array(req.length).fill(null));
     setResults(Array(req.length).fill(null));
