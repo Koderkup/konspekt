@@ -64,8 +64,10 @@ export default function HomeScreen() {
             кликните по кнопке ПРОВЕРИТЬ
           </ThemedText>{" "}
           для теста своих знаний{" "}
-          <ThemedText type="defaultSemiBold">Или СБРОС</ThemedText> чтобы начать
-          занаво.{" "}
+          <ThemedText type="defaultSemiBold">
+            Или двойной клик по кнопке ПРОВЕРИТЬ и совершить СБРОС
+          </ThemedText>{" "}
+          чтобы начать занаво.{" "}
           <ThemedText type="defaultSemiBold">
             ПРОВЕРИТЬ&gt;&gt; СБРОС
           </ThemedText>{" "}
