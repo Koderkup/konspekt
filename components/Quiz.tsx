@@ -12,13 +12,13 @@ const Quiz: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [results, setResults] = useState<string[]>([]);
+  const [results, setResults] = useState<(string | null)[]>([]);
 
   useEffect(() => {
     const req = require("../../konspekt/questions.json");
     setQuestions(req);
-    setAnswers(Array(req.length).fill(null)); // Инициализируем массив ответов
-    setResults(Array(req.length).fill(null)); // Инициализируем массив результатов
+    setAnswers(Array(req.length).fill(null));
+    setResults(Array(req.length).fill(null));
   }, []);
 
   const handleAnswer = (index: number, value: string) => {
@@ -28,11 +28,32 @@ const Quiz: React.FC = () => {
   };
 
   const checkAnswers = () => {
-    const newResults = questions.map((question, index) =>
-      answers[index] === question.correct ? "correct" : "incorrect"
-    );
+    const newResults = questions.map((question, index) => {
+      if (answers[index] === null) {
+        return null;
+      }
+      return answers[index] === question.correct ? "correct" : "incorrect";
+    });
     setResults(newResults);
   };
+
+  const resetAnswers = () => {
+    setAnswers(Array(questions.length).fill(null));
+    setResults(Array(questions.length).fill(null));
+  };
+let timer: NodeJS.Timeout | null = null;
+ const handleCheckButtonPress = () => {
+   if (timer) {
+     clearTimeout(timer);
+     timer = null;
+     resetAnswers();
+   } else {
+     timer = setTimeout(() => {
+       checkAnswers();
+       timer = null;
+     }, 300);
+   }
+ };
 
   const goToNextPage = () => {
     setCurrentPage((prevPage) =>
@@ -44,8 +65,8 @@ const Quiz: React.FC = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
 
-  const startIndex = currentPage * 2; // 2 вопроса на странице
-  const currentQuestions = questions.slice(startIndex, startIndex + 2); // Получаем текущие вопросы
+  const startIndex = currentPage * 2;
+  const currentQuestions = questions.slice(startIndex, startIndex + 2);
 
   return (
     <View style={styles.container}>
@@ -79,11 +100,8 @@ const Quiz: React.FC = () => {
           )}
         </View>
       ))}
-      <TouchableOpacity style={styles.checkButton} onPress={checkAnswers}>
-        <Text style={styles.buttonText}>Проверить</Text>
-      </TouchableOpacity>
       <View style={styles.pagination}>
-        <Button
+        {/* <Button
           title="Назад"
           onPress={goToPrevPage}
           disabled={currentPage === 0}
@@ -92,7 +110,33 @@ const Quiz: React.FC = () => {
           title="Вперед"
           onPress={goToNextPage}
           disabled={startIndex + 2 >= questions.length}
-        />
+        /> */}
+        <TouchableOpacity
+          style={[
+            styles.button_pgn,
+            currentPage === 0 && styles.disabledButton,
+          ]}
+          onPress={goToPrevPage}
+          disabled={currentPage === 0}
+        >
+          <Text style={styles.buttonText}>&#8656;</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.checkButton}
+          onPress={handleCheckButtonPress}
+        >
+          <Text style={styles.buttonText}>Проверить</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button_pgn,
+            startIndex + 2 >= questions.length && styles.disabledButton,
+          ]}
+          onPress={goToNextPage}
+          disabled={startIndex + 2 >= questions.length}
+        >
+          <Text style={styles.buttonText}>&#8658;</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -131,9 +175,8 @@ const styles = StyleSheet.create({
     color: "red",
   },
   checkButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "rgba(0, 123, 255, 0.7)",
     padding: 10,
     borderRadius: 5,
@@ -146,6 +189,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+  },
+  button_pgn: {
+    width: 50,
+    height: 50,
+    borderRadius: "50%",
+    backgroundColor: "rgba(0, 123, 255, 0.9)",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  disabledButton: {
+    backgroundColor: "rgba(0, 123, 255, 0.3)",
+    opacity: 0.5,
   },
 });
 
